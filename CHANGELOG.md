@@ -1,9 +1,7 @@
 # Change Log
 
-All notable changes to the "liv-tag-runner" extension will be documented in this file.
+Resumo de releases.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## Releases
 
-## [Unreleased]
-
-- Initial release
+- 1.0.0 - Execução de tags para os projetos `automation-api`, `automation-pj` e `automation-store`.
