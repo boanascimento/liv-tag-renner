@@ -1,0 +1,68 @@
+{
+	"name": "liv-tag-runner",
+	"displayName": "liv-tag-runner",
+	"description": "Extensão do VSCode que executa uma tag com o comando `cucumber`.",
+	"version": "0.0.1",
+	"publisher": "boanergesbone",
+	"icon": "lor-logo.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/boanascimento/liv-tag-runner"
+	},
+	"engines": {
+		"vscode": "^1.49.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:liv-tag-runner.runTagDev",
+		"onCommand:liv-tag-runner.runTagUAT"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "liv-tag-runner.runTagDev",
+				"title": "LTR - Run Gherkin Tag DEV"
+			},
+			{
+				"command": "liv-tag-runner.runTagUAT",
+				"title": "LTR - Run Gherkin Tag UAT"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "liv-tag-runner.runTagDev",
+					"when": "editorHasSelection"
+				},
+				{
+					"command": "liv-tag-runner.runTagUAT",
+					"when": "editorHasSelection"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.49.0",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^13.11.0",
+		"eslint": "^6.8.0",
+		"@typescript-eslint/parser": "^2.30.0",
+		"@typescript-eslint/eslint-plugin": "^2.30.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.1.2",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.3.0"
+	}
+}
