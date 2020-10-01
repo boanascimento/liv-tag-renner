@@ -1,10 +1,10 @@
 {
 	"name": "liv-tag-runner",
-	"displayName": "liv-tag-runner",
+	"displayName": "Livelo Tag Runner",
 	"description": "Extensão do VSCode que executa uma tag com o comando `cucumber`.",
 	"version": "0.0.1",
 	"publisher": "boanergesbone",
-	"icon": "lor-logo.png",
+	"icon": "ltr-logo.png",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/boanascimento/liv-tag-runner"
@@ -50,7 +50,8 @@
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"create-vsix": "vsce package"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.49.0",
