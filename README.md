@@ -1,6 +1,6 @@
 # Livelo Tag Runner
 
-O Livelo Tag Runner é uma extensão do VSCode que te permite auxilia na execução de tags de automações Livelo.
+O Livelo Tag Runner é uma extensão do VSCode que te auxilia na execução de tags de arquivos Guerkins de automações Livelo.
 
 ## Como usar
 
