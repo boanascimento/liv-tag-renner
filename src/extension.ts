@@ -36,7 +36,7 @@ function executeCommand(environment: string, path: string) {
 		} else if (projectName === EProjects.automationPj) {
 			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? 'lpp' : 'lpp -p dev'}`);
 		} else if (projectName === EProjects.automationStore) {
-			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? 'pts' : 'pts -p dev'}`);
+			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? '' : ' dev'}`);
 		}
 	}
 }
