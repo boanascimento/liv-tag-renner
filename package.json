@@ -2,7 +2,7 @@
 	"name": "liv-tag-runner",
 	"displayName": "Livelo Tag Runner",
 	"description": "Extensão do VSCode que executa uma tag com o comando `cucumber`.",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"publisher": "boanergesbone",
 	"icon": "ltr-logo.png",
 	"repository": {
@@ -17,7 +17,9 @@
 	],
 	"activationEvents": [
 		"onCommand:liv-tag-runner.runTagDev",
-		"onCommand:liv-tag-runner.runTagUAT"
+		"onCommand:liv-tag-runner.runTagUAT",
+		"onCommand:liv-tag-runner.runAppTagAndroid",
+		"onCommand:liv-tag-runner.runAppTagIOS"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -29,6 +31,14 @@
 			{
 				"command": "liv-tag-runner.runTagUAT",
 				"title": "LTR - Run Gherkin Tag UAT"
+			},
+			{
+				"command": "liv-tag-runner.runAppTagIOS",
+				"title": "LTR - Run APP Tag on iOS"
+			},
+			{
+				"command": "liv-tag-runner.runAppTagAndroid",
+				"title": "LTR - Run APP Tag on Android"
 			}
 		],
 		"menus": {
@@ -39,6 +49,14 @@
 				},
 				{
 					"command": "liv-tag-runner.runTagUAT",
+					"when": "editorHasSelection"
+				},
+				{
+					"command": "liv-tag-runner.runAppTagIOS",
+					"when": "editorHasSelection"
+				},
+				{
+					"command": "liv-tag-runner.runAppTagAndroid",
 					"when": "editorHasSelection"
 				}
 			]

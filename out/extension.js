@@ -33,7 +33,10 @@ function executeCommand(environment, path) {
             terminal === null || terminal === void 0 ? void 0 : terminal.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? 'lpp' : 'lpp -p dev'}`);
         }
         else if (projectName === "automation-store" /* automationStore */) {
-            terminal === null || terminal === void 0 ? void 0 : terminal.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? 'pts' : 'pts -p dev'}`);
+            terminal === null || terminal === void 0 ? void 0 : terminal.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? '' : ' dev'}`);
+        }
+        else if (projectName === "automation-app" /* automationApp */) {
+            terminal === null || terminal === void 0 ? void 0 : terminal.sendText(`rake run_ios\\[${tag},1234,1,\\]`);
         }
     }
 }
@@ -58,6 +61,7 @@ function checkProject(path) {
     const foldersName = path.split('/');
     const projects = [
         'automation-api',
+        'automation-app',
         'automation-pj',
         'automation-store'
     ];

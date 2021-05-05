@@ -1,11 +1,6 @@
 import * as vscode from 'vscode';
-
-
-const enum EProjects {
-	automationApi = 'automation-api',
-	automationPj = 'automation-pj',
-	automationStore = 'automation-store'
-};
+import { EPlatform, EProjects } from './enums';
+import { Platform } from './types';
 
 export function activate(context: vscode.ExtensionContext) {
 	let runTagDev = vscode.commands.registerCommand('liv-tag-runner.runTagDev', (item) => {
@@ -17,6 +12,16 @@ export function activate(context: vscode.ExtensionContext) {
 		executeCommand('UAT', item.path);
 	});
 	context.subscriptions.push(runTagUAT);
+
+	let runAppTagIOS = vscode.commands.registerCommand('liv-tag-runner.runAppTagIOS', (item) => {
+		executeAppCommand(item.path, EPlatform.ios);
+	});
+	context.subscriptions.push(runAppTagIOS);
+
+	let runAppTagAndroid = vscode.commands.registerCommand('liv-tag-runner.runAppTagAndroid', (item) => {
+		executeAppCommand(item.path, EPlatform.android);
+	});
+	context.subscriptions.push(runAppTagAndroid);
 }
 
 /**
@@ -30,13 +35,31 @@ function executeCommand(environment: string, path: string) {
 	const projectName = checkProject(path);
 	const terminal = getActiveTerminal();
 	if (validateTag(tag)) {
-			terminal?.show(true);
+		terminal?.show(true);
 		if (projectName === EProjects.automationApi) {
 			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? 'local' : 'dev'}`);
 		} else if (projectName === EProjects.automationPj) {
 			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? 'lpp' : 'lpp -p dev'}`);
 		} else if (projectName === EProjects.automationStore) {
 			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? '' : ' dev'}`);
+		}
+	}
+}
+
+/**
+ * Executes the command.
+ * @param path Path of the lite where the command was activated.
+ * @param platform Platform wich be executed the tag.
+ */
+function executeAppCommand(path: string, platform: Platform) {
+	const textEditor = vscode.window.activeTextEditor;
+	const tag = textEditor?.document.getText(textEditor?.selection) as string;
+	const projectName = checkProject(path);
+	const terminal = getActiveTerminal();
+	if (validateTag(tag)) {
+		terminal?.show(true);
+		if (projectName === EProjects.automationApp) {
+			terminal?.sendText(`rake run_${platform}\\[${tag},1234,1,\\]`);
 		}
 	}
 }
@@ -62,6 +85,7 @@ function checkProject(path: string): string {
 	const foldersName = path.split('/');
 	const projects = [
 		'automation-api',
+		'automation-app',
 		'automation-pj',
 		'automation-store'
 	];
