@@ -42,6 +42,22 @@ export function activate(context: vscode.ExtensionContext) {
   );
   context.subscriptions.push(runAppTagAndroid);
 
+  const runAppTagAndroidOnFarm = vscode.commands.registerCommand(
+    "liv-tag-runner.runAppTagAndroidOnFarm",
+    (item) => {
+      executeAppCommand(item.path, EPlatform.android, true);
+    }
+  );
+  context.subscriptions.push(runAppTagAndroidOnFarm);
+
+  const runAppTagIosOnFarm = vscode.commands.registerCommand(
+    "liv-tag-runner.runAppTagIosOnFarm",
+    (item) => {
+      executeAppCommand(item.path, EPlatform.android, true);
+    }
+  );
+  context.subscriptions.push(runAppTagIosOnFarm);
+
   context.subscriptions.push(lrtPrepare);
 }
 
@@ -78,20 +94,33 @@ function executeCommand(environment: string, path: string) {
  * @param path Path of the lite where the command was activated.
  * @param platform Platform wich be executed the tag.
  */
-function executeAppCommand(path: string, platform: Platform) {
+function executeAppCommand(
+  path: string,
+  platform: Platform,
+  isOnFarm?: boolean
+) {
   const textEditor = vscode.window.activeTextEditor;
-  const tag = textEditor?.document.getText(textEditor?.selection) as string;
+	const selectedTag = textEditor?.document.getText(textEditor?.selection) as string;
+  const tag = selectedTag.trim().includes('@') ? selectedTag : `@${selectedTag}`;
   const projectName = checkProject(path);
   const terminal = getActiveTerminal();
   const settings = getLtrSettingFile();
-  console.log(
-    `🚀  Bonny ~ file: extension.ts:66 ~ executeAppCommand ~ settings:`,
-    settings
-  );
   if (validateTag(tag)) {
     terminal?.show(true);
     if (projectName === EProjects.automationApp) {
-      terminal?.sendText(`rake run_${platform}\\[${tag},1234,1,\\]`);
+			const artefactNumber = settings.artefactReleaseIdFor[platform];
+			
+      if (isOnFarm) {
+				const deviceInfo = settings.devicefarmIdFor[platform];
+				const releaseType = settings.releaseType;
+
+        terminal?.sendText(`rake run_tests'[,,${tag},,dynamic_type,labmobile,${platform},${deviceInfo},real,${artefactNumber},${releaseType}]'
+			`);
+      } else {
+        terminal?.sendText(
+          `rake run_${platform}\\[${tag},${artefactNumber},1,\\]`
+        );
+      }
     }
   }
 }
@@ -159,10 +188,8 @@ const lrtPrepare = vscode.commands.registerCommand(
     const setting = getLtrSettingFile();
 
     if (setting?.artefactReleaseIdFor?.android) {
-      vscode.window.showWarningMessage(
-        'Arquivo "ltrSettings.json" já existe!'
-      );
-		} else {
+      vscode.window.showWarningMessage('Arquivo "ltrSettings.json" já existe!');
+    } else {
       const value: ILTRSettings = {
         artefactReleaseIdFor: {
           ios: "12345",
@@ -192,13 +219,13 @@ const lrtPrepare = vscode.commands.registerCommand(
  * Gets `lrtSetting.json` file data.
  */
 function getLtrSettingFile(): ILTRSettings {
-	try {
-		const _workspace = vscode.workspace.workspaceFolders![0];
-		const data = fs.readFileSync(_workspace.uri.fsPath + ltrSettingPath);
-		return JSON.parse(data.toString());
-	} catch (error) {
-		return JSON.parse('{}');
-	}
+  try {
+    const _workspace = vscode.workspace.workspaceFolders![0];
+    const data = fs.readFileSync(_workspace.uri.fsPath + ltrSettingPath);
+    return JSON.parse(data.toString());
+  } catch (error) {
+    return JSON.parse("{}");
+  }
 }
 
 // this method is called when your extension is deactivated

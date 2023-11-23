@@ -2,7 +2,7 @@
   "name": "liv-tag-runner",
   "displayName": "Livelo Tag Runner",
   "description": "Extensão do VSCode que executa uma tag com o comando `cucumber`.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "boanergesbone",
   "icon": "ltr-logo.png",
   "repository": {
@@ -20,7 +20,9 @@
     "onCommand:liv-tag-runner.runTagUAT",
     "onCommand:liv-tag-runner.runAppTagAndroid",
     "onCommand:liv-tag-runner.runAppTagIOS",
-    "onCommand:liv-tag-runner.lrtPrepare"
+    "onCommand:liv-tag-runner.lrtPrepare",
+		"onCommand:liv-tag-runner.runAppTagAndroidOnFarm",
+		"onCommand:liv-tag-runner.runAppTagIosOnFarm"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -33,23 +35,31 @@
     "commands": [
       {
         "command": "liv-tag-runner.runTagDev",
-        "title": "LTR - Run Gherkin Tag DEV"
+        "title": "Run Gherkin Tag DEV"
       },
       {
         "command": "liv-tag-runner.runTagUAT",
-        "title": "LTR - Run Gherkin Tag UAT"
+        "title": "Run Gherkin Tag UAT"
       },
       {
         "command": "liv-tag-runner.runAppTagIOS",
-        "title": "LTR - Run APP Tag on iOS"
+        "title": "Run APP Tag on iOS"
       },
       {
         "command": "liv-tag-runner.runAppTagAndroid",
-        "title": "LTR - Run APP Tag on Android"
+        "title": "Run APP Tag on Android"
       },
       {
         "command": "liv-tag-runner.lrtPrepare",
-        "title": "LTR - Prepare"
+        "title": "Prepare"
+      },
+      {
+        "command": "liv-tag-runner.runAppTagAndroidOnFarm",
+        "title": "Run APP Tag on Android on Device Farm"
+      },
+      {
+        "command": "liv-tag-runner.runAppTagIosOnFarm",
+        "title": "Run APP Tag on iOS on Device Farm"
       }
     ],
     "submenus": [
@@ -74,19 +84,27 @@
       "ltrRunner": [
         {
           "command": "liv-tag-runner.runTagDev",
-					"group": "api"
+          "group": "api"
         },
         {
           "command": "liv-tag-runner.runTagUAT",
-					"group": "api"
+          "group": "api"
         },
         {
           "command": "liv-tag-runner.runAppTagIOS",
-					"group": "app"
+          "group": "app"
         },
         {
           "command": "liv-tag-runner.runAppTagAndroid",
-					"group": "app"
+          "group": "app"
+        },
+        {
+          "command": "liv-tag-runner.runAppTagAndroidOnFarm",
+          "group": "farm"
+        },
+        {
+          "command": "liv-tag-runner.runAppTagIosOnFarm",
+          "group": "farm"
         }
       ]
     }
