@@ -1,0 +1,38 @@
+{
+  "properties": {
+    "artefactReleaseIdFor": {
+      "$id": "#/properties/dev",
+      "type": "string",
+      "title": "Código do artefato de release a ser utilizado na utilizado na Farm.",
+      "description": "",
+      "default": "",
+      "examples": [
+        {
+          "ios": "12345",
+          "android": "12345"
+        }
+      ]
+    },
+    "devicefarmIdFor": {
+      "$id": "#/properties/type",
+      "type": "string",
+      "title": "ID do dispositivo da farm ou o número de devices a ser reservado para teste.",
+      "description": "",
+      "default": "",
+      "examples": [
+        {
+          "ios": "12345",
+          "android": "12345"
+        }
+      ]
+    },
+    "releaseType": {
+      "$id": "#/properties/type",
+      "type": "string",
+      "title": "Tipo da release a ser testada.",
+      "description": "",
+      "default": "",
+      "examples": ["squad_release", "builds_release"]
+    }
+  }
+}

@@ -1,27 +1,48 @@
-import * as vscode from 'vscode';
-import { EPlatform, EProjects } from './enums';
-import { Platform } from './types';
+import * as vscode from "vscode";
+import { EPlatform, EProjects } from "./enums";
+import { ILTRSettings, Platform } from "./types";
+import * as os from "os";
+import * as fs from "fs";
+
+const ltrSettingPath =
+  os.platform() === "darwin"
+    ? "/app/ltrSettings.json"
+    : "\\app\\ltrSettings.json";
 
 export function activate(context: vscode.ExtensionContext) {
-	let runTagDev = vscode.commands.registerCommand('liv-tag-runner.runTagDev', (item) => {
-		executeCommand('DEV', item.path);
-	});
-	context.subscriptions.push(runTagDev);
+  const runTagDev = vscode.commands.registerCommand(
+    "liv-tag-runner.runTagDev",
+    (item) => {
+      executeCommand("DEV", item.path);
+    }
+  );
+  context.subscriptions.push(runTagDev);
 
-	let runTagUAT = vscode.commands.registerCommand('liv-tag-runner.runTagUAT', (item) => {
-		executeCommand('UAT', item.path);
-	});
-	context.subscriptions.push(runTagUAT);
+  const runTagUAT = vscode.commands.registerCommand(
+    "liv-tag-runner.runTagUAT",
+    (item) => {
+      executeCommand("UAT", item.path);
+    }
+  );
+  context.subscriptions.push(runTagUAT);
 
-	let runAppTagIOS = vscode.commands.registerCommand('liv-tag-runner.runAppTagIOS', (item) => {
-		executeAppCommand(item.path, EPlatform.ios);
-	});
-	context.subscriptions.push(runAppTagIOS);
+  const runAppTagIOS = vscode.commands.registerCommand(
+    "liv-tag-runner.runAppTagIOS",
+    (item) => {
+      executeAppCommand(item.path, EPlatform.ios);
+    }
+  );
+  context.subscriptions.push(runAppTagIOS);
 
-	let runAppTagAndroid = vscode.commands.registerCommand('liv-tag-runner.runAppTagAndroid', (item) => {
-		executeAppCommand(item.path, EPlatform.android);
-	});
-	context.subscriptions.push(runAppTagAndroid);
+  const runAppTagAndroid = vscode.commands.registerCommand(
+    "liv-tag-runner.runAppTagAndroid",
+    (item) => {
+      executeAppCommand(item.path, EPlatform.android);
+    }
+  );
+  context.subscriptions.push(runAppTagAndroid);
+
+  context.subscriptions.push(lrtPrepare);
 }
 
 /**
@@ -30,20 +51,26 @@ export function activate(context: vscode.ExtensionContext) {
  * @param path Path of the lite where the command was activated.
  */
 function executeCommand(environment: string, path: string) {
-	const textEditor = vscode.window.activeTextEditor;
-	const tag = textEditor?.document.getText(textEditor?.selection) as string;
-	const projectName = checkProject(path);
-	const terminal = getActiveTerminal();
-	if (validateTag(tag)) {
-		terminal?.show(true);
-		if (projectName === EProjects.automationApi) {
-			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? 'local' : 'dev'}`);
-		} else if (projectName === EProjects.automationPj) {
-			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? 'lpp' : 'lpp -p dev'}`);
-		} else if (projectName === EProjects.automationStore) {
-			terminal?.sendText(`cucumber -t ${tag} -p ${environment === 'UAT' ? '' : ' dev'}`);
-		}
-	}
+  const textEditor = vscode.window.activeTextEditor;
+  const tag = textEditor?.document.getText(textEditor?.selection) as string;
+  const projectName = checkProject(path);
+  const terminal = getActiveTerminal();
+  if (validateTag(tag)) {
+    terminal?.show(true);
+    if (projectName === EProjects.automationApi) {
+      terminal?.sendText(
+        `cucumber -t ${tag} -p ${environment === "UAT" ? "local" : "dev"}`
+      );
+    } else if (projectName === EProjects.automationPj) {
+      terminal?.sendText(
+        `cucumber -t ${tag} -p ${environment === "UAT" ? "lpp" : "lpp -p dev"}`
+      );
+    } else if (projectName === EProjects.automationStore) {
+      terminal?.sendText(
+        `cucumber -t ${tag} -p ${environment === "UAT" ? "" : " dev"}`
+      );
+    }
+  }
 }
 
 /**
@@ -52,16 +79,21 @@ function executeCommand(environment: string, path: string) {
  * @param platform Platform wich be executed the tag.
  */
 function executeAppCommand(path: string, platform: Platform) {
-	const textEditor = vscode.window.activeTextEditor;
-	const tag = textEditor?.document.getText(textEditor?.selection) as string;
-	const projectName = checkProject(path);
-	const terminal = getActiveTerminal();
-	if (validateTag(tag)) {
-		terminal?.show(true);
-		if (projectName === EProjects.automationApp) {
-			terminal?.sendText(`rake run_${platform}\\[${tag},1234,1,\\]`);
-		}
-	}
+  const textEditor = vscode.window.activeTextEditor;
+  const tag = textEditor?.document.getText(textEditor?.selection) as string;
+  const projectName = checkProject(path);
+  const terminal = getActiveTerminal();
+  const settings = getLtrSettingFile();
+  console.log(
+    `🚀  Bonny ~ file: extension.ts:66 ~ executeAppCommand ~ settings:`,
+    settings
+  );
+  if (validateTag(tag)) {
+    terminal?.show(true);
+    if (projectName === EProjects.automationApp) {
+      terminal?.sendText(`rake run_${platform}\\[${tag},1234,1,\\]`);
+    }
+  }
 }
 
 /**
@@ -69,12 +101,12 @@ function executeAppCommand(path: string, platform: Platform) {
  * @param tag Tag selected by the user.
  */
 function validateTag(tag: string): boolean {
-	if (tag.indexOf('@') > -1) {
-		return true;
-	} else {
-		vscode.window.showWarningMessage('Texto selecionado não é uma tag válida!');
-		return false;
-	}
+  if (tag.indexOf("@") > -1) {
+    return true;
+  } else {
+    vscode.window.showWarningMessage("Texto selecionado não é uma tag válida!");
+    return false;
+  }
 }
 
 /**
@@ -82,20 +114,20 @@ function validateTag(tag: string): boolean {
  * @param path Path of the lite where the command was activated.
  */
 function checkProject(path: string): string {
-	const foldersName = path.split('/');
-	const projects = [
-		'automation-api',
-		'automation-app',
-		'automation-pj',
-		'automation-store'
-	];
-	const projectName = foldersName.find(folderName => {
-		const result = projects.find(project => {
-			return project === folderName ? project : false;
-		});
-		return result ? result : false;
-	}) as string;
-	return projectName;
+  const foldersName = path.split("/");
+  const projects = [
+    "automation-api",
+    "automation-app",
+    "automation-pj",
+    "automation-store",
+  ];
+  const projectName = foldersName.find((folderName) => {
+    const result = projects.find((project) => {
+      return project === folderName ? project : false;
+    });
+    return result ? result : false;
+  }) as string;
+  return projectName;
 }
 
 /**
@@ -103,14 +135,71 @@ function checkProject(path: string): string {
  * @returns vscode.Terminal
  */
 function getActiveTerminal(): vscode.Terminal {
-	const occActionsTerminalName = "LTR actions";
-	let occActiveTerminal = vscode.window.terminals.find((activeTerm) => {
-		return activeTerm.name === occActionsTerminalName ? activeTerm : false;
-	});
-	if (occActiveTerminal?.creationOptions.name === occActionsTerminalName) {
-		return occActiveTerminal;
-	} else { return vscode.window.createTerminal(occActionsTerminalName); }
+  const occActionsTerminalName = "LTR actions";
+  let occActiveTerminal = vscode.window.terminals.find((activeTerm) => {
+    return activeTerm.name === occActionsTerminalName ? activeTerm : false;
+  });
+  if (occActiveTerminal?.creationOptions.name === occActionsTerminalName) {
+    return occActiveTerminal;
+  } else {
+    return vscode.window.createTerminal(occActionsTerminalName);
+  }
+}
+
+/**
+ * Creates ltrSettings file
+ */
+const lrtPrepare = vscode.commands.registerCommand(
+  "liv-tag-runner.lrtPrepare",
+  (_item) => {
+    const _workspace = vscode.workspace.workspaceFolders![0];
+    const fsPath = _workspace.uri.fsPath;
+    const wsedit = new vscode.WorkspaceEdit();
+    const filePath = vscode.Uri.file(fsPath + "/app/ltrSettings.json");
+    const setting = getLtrSettingFile();
+
+    if (setting?.artefactReleaseIdFor?.android) {
+      vscode.window.showWarningMessage(
+        'Arquivo "ltrSettings.json" já existe!'
+      );
+		} else {
+      const value: ILTRSettings = {
+        artefactReleaseIdFor: {
+          ios: "12345",
+          android: "12345",
+        },
+        devicefarmIdFor: {
+          android: "1",
+          ios: "1",
+        },
+        releaseType: "squad_release",
+      };
+      const textEdit = new vscode.TextEdit(
+        new vscode.Range(1, 1, 1, 1),
+        JSON.stringify(value)
+      );
+      wsedit.createFile(filePath, { ignoreIfExists: true, overwrite: true });
+      wsedit.set(filePath, [textEdit]);
+      vscode.workspace.applyEdit(wsedit);
+      vscode.window.showInformationMessage(
+        'Arquivo "ltrSettings.json" criado!'
+      );
+    }
+  }
+);
+
+/**
+ * Gets `lrtSetting.json` file data.
+ */
+function getLtrSettingFile(): ILTRSettings {
+	try {
+		const _workspace = vscode.workspace.workspaceFolders![0];
+		const data = fs.readFileSync(_workspace.uri.fsPath + ltrSettingPath);
+		return JSON.parse(data.toString());
+	} catch (error) {
+		return JSON.parse('{}');
+	}
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {}
