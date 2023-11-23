@@ -2,7 +2,7 @@
   "name": "liv-tag-runner",
   "displayName": "Livelo Tag Runner",
   "description": "Extensão do VSCode que executa uma tag com o comando `cucumber`.",
-  "version": "0.2.0",
+  "version": "2.0.0",
   "publisher": "boanergesbone",
   "icon": "ltr-logo.png",
   "repository": {
@@ -10,7 +10,7 @@
     "url": "https://github.com/boanascimento/liv-tag-runner"
   },
   "engines": {
-    "vscode": "^1.42.0"
+    "vscode": "^1.82.0"
   },
   "categories": [
     "Other"
@@ -21,8 +21,8 @@
     "onCommand:liv-tag-runner.runAppTagAndroid",
     "onCommand:liv-tag-runner.runAppTagIOS",
     "onCommand:liv-tag-runner.lrtPrepare",
-		"onCommand:liv-tag-runner.runAppTagAndroidOnFarm",
-		"onCommand:liv-tag-runner.runAppTagIosOnFarm"
+    "onCommand:liv-tag-runner.runAppTagAndroidOnFarm",
+    "onCommand:liv-tag-runner.runAppTagIosOnFarm"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -51,7 +51,7 @@
       },
       {
         "command": "liv-tag-runner.lrtPrepare",
-        "title": "Prepare"
+        "title": "LTR Prepare"
       },
       {
         "command": "liv-tag-runner.runAppTagAndroidOnFarm",
@@ -119,19 +119,16 @@
     "create-vsix": "vsce package"
   },
   "devDependencies": {
-    "@types/chromedriver": "^2.38.0",
-    "@types/glob": "^7.1.1",
-    "@types/mocha": "^7.0.1",
-    "@types/node": "^12.11.7",
-    "@types/vscode": "^1.42.0",
-    "@typescript-eslint/eslint-plugin": "^2.18.0",
-    "@typescript-eslint/parser": "^2.18.0",
-    "eslint": "^6.8.0",
-    "glob": "^7.1.6",
-    "mocha": "^7.0.1",
-    "typescript": "^3.7.5",
-    "vscode": "^1.1.37",
-    "vscode-test": "^1.3.0"
+    "@types/vscode": "^1.82.0",
+    "@types/mocha": "^10.0.3",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.2.2",
+    "@vscode/test-electron": "^2.3.6"
   },
   "dependencies": {
     "chromedriver": "^88.0.0",

@@ -8,7 +8,7 @@
 - Intale o `vsce` com o comando `npm i -g vsce`;
 
 - No terminal, execute o comando `npm run create-vsix`;
-  > Vai ser criado um arquivo com o nome da extensão e a versão `liv-tag-runner-0.1.0.vsix` na pasta principal do projeto.
+  > Vai ser criado um arquivo com o nome da extensão e a versão `liv-tag-runner-X.X.X.vsix` na pasta principal do projeto.
 
 - Clique no ícone das extensões do VS Code(Market plane);
 

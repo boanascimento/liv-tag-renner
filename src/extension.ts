@@ -53,7 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
   const runAppTagIosOnFarm = vscode.commands.registerCommand(
     "liv-tag-runner.runAppTagIosOnFarm",
     (item) => {
-      executeAppCommand(item.path, EPlatform.android, true);
+      executeAppCommand(item.path, EPlatform.ios, true);
     }
   );
   context.subscriptions.push(runAppTagIosOnFarm);

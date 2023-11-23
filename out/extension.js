@@ -17,19 +17,19 @@ function activate(context) {
     });
     context.subscriptions.push(runTagUAT);
     const runAppTagIOS = vscode.commands.registerCommand("liv-tag-runner.runAppTagIOS", (item) => {
-        executeAppCommand(item.path, "ios" /* ios */);
+        executeAppCommand(item.path, "ios" /* EPlatform.ios */);
     });
     context.subscriptions.push(runAppTagIOS);
     const runAppTagAndroid = vscode.commands.registerCommand("liv-tag-runner.runAppTagAndroid", (item) => {
-        executeAppCommand(item.path, "android" /* android */);
+        executeAppCommand(item.path, "android" /* EPlatform.android */);
     });
     context.subscriptions.push(runAppTagAndroid);
     const runAppTagAndroidOnFarm = vscode.commands.registerCommand("liv-tag-runner.runAppTagAndroidOnFarm", (item) => {
-        executeAppCommand(item.path, "android" /* android */, true);
+        executeAppCommand(item.path, "android" /* EPlatform.android */, true);
     });
     context.subscriptions.push(runAppTagAndroidOnFarm);
     const runAppTagIosOnFarm = vscode.commands.registerCommand("liv-tag-runner.runAppTagIosOnFarm", (item) => {
-        executeAppCommand(item.path, "android" /* android */, true);
+        executeAppCommand(item.path, "android" /* EPlatform.android */, true);
     });
     context.subscriptions.push(runAppTagIosOnFarm);
     context.subscriptions.push(lrtPrepare);
@@ -47,13 +47,13 @@ function executeCommand(environment, path) {
     const terminal = getActiveTerminal();
     if (validateTag(tag)) {
         terminal === null || terminal === void 0 ? void 0 : terminal.show(true);
-        if (projectName === "automation-api" /* automationApi */) {
+        if (projectName === "automation-api" /* EProjects.automationApi */) {
             terminal === null || terminal === void 0 ? void 0 : terminal.sendText(`cucumber -t ${tag} -p ${environment === "UAT" ? "local" : "dev"}`);
         }
-        else if (projectName === "automation-pj" /* automationPj */) {
+        else if (projectName === "automation-pj" /* EProjects.automationPj */) {
             terminal === null || terminal === void 0 ? void 0 : terminal.sendText(`cucumber -t ${tag} -p ${environment === "UAT" ? "lpp" : "lpp -p dev"}`);
         }
-        else if (projectName === "automation-store" /* automationStore */) {
+        else if (projectName === "automation-store" /* EProjects.automationStore */) {
             terminal === null || terminal === void 0 ? void 0 : terminal.sendText(`cucumber -t ${tag} -p ${environment === "UAT" ? "" : " dev"}`);
         }
     }
@@ -72,7 +72,7 @@ function executeAppCommand(path, platform, isOnFarm) {
     const settings = getLtrSettingFile();
     if (validateTag(tag)) {
         terminal === null || terminal === void 0 ? void 0 : terminal.show(true);
-        if (projectName === "automation-app" /* automationApp */) {
+        if (projectName === "automation-app" /* EProjects.automationApp */) {
             const artefactNumber = settings.artefactReleaseIdFor[platform];
             if (isOnFarm) {
                 const deviceInfo = settings.devicefarmIdFor[platform];
